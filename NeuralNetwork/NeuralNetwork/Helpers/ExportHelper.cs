@@ -47,10 +47,5 @@ namespace NeuralNetwork.Helpers
 				}
 			}
 		}
-
-        //private static HelperNetwork GetHelperNetwork(Network network)
-        //{
-        //    return network.ToHelperNetwork();
-        //}
 	}
 }
