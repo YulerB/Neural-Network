@@ -149,12 +149,4 @@ namespace NeuralNetwork.NetworkModels
             return new HelperNetwork(this.LearnRate, this.Momentum, hnInputLayer , hnHiddenLayers, hnOutputLayer, hnSynapses);            
         }
 	}
-
-	#region -- Enum --
-	public enum TrainingType
-	{
-		Epoch,
-		MinimumError
-	}
-	#endregion
 }

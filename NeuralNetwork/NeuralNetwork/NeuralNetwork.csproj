@@ -55,6 +55,7 @@
     <Compile Include="NetworkModels\Sigmoid.cs" />
     <Compile Include="NetworkModels\Synapse.cs" />
     <Compile Include="NetworkModels\Synapses.cs" />
+    <Compile Include="NetworkModels\TrainingType.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
