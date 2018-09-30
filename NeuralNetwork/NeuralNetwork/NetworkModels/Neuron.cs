@@ -28,7 +28,7 @@ namespace NeuralNetwork.NetworkModels
 			OutputSynapses = new Synapses();
 			Bias = Network.GetRandom();
 		}
-        public Neuron(Guid id, double bias, double biasDelta, double gradient, double value)
+        public Neuron(Guid id, double bias, double biasDelta, double gradient, double value) : this()
         {
             this.Id = id;
             this.Bias = bias;

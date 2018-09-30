@@ -4,6 +4,7 @@ namespace NeuralNetwork.Helpers
 {
     public class HelperNeuron
 	{
+        public HelperNeuron() { }
         public HelperNeuron(double bias, double biasDelta, double gradient, Guid id, double value)
         {
             Bias = bias;
@@ -13,10 +14,10 @@ namespace NeuralNetwork.Helpers
             Value = value;
         }
 
-        public Guid Id { get;private set; }
-		public double Bias { get; private set; }
-		public double BiasDelta { get; private set; }
-		public double Gradient { get; private set; }
-		public double Value { get; private set; }
+        public Guid Id { get; set; }
+		public double Bias { get;  set; }
+		public double BiasDelta { get;  set; }
+		public double Gradient { get;  set; }
+		public double Value { get;  set; }
 	}
 }

@@ -40,6 +40,16 @@ namespace NeuralNetwork
                 var output = _network.Compute(new double[] { set.Values[0], set.Values[1] });
                 Console.WriteLine($"({set.Values[0]},{set.Values[1]}) = {output[0]} rounded to {Math.Round(output[0], 0)}, expected {set.Targets[0]}");
             }
+
+            ExportHelper.ExportNetwork(_network);
+
+            ImportHelper.ImportNetwork();
+
+            foreach (var set in dataSet)
+            {
+                var output = _network.Compute(new double[] { set.Values[0], set.Values[1] });
+                Console.WriteLine($"({set.Values[0]},{set.Values[1]}) = {output[0]} rounded to {Math.Round(output[0], 0)}, expected {set.Targets[0]}");
+            }
         }
 
         private static void MakeNetworkBinary3ToDecimal()
