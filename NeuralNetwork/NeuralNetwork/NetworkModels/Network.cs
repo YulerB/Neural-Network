@@ -1,6 +1,7 @@
 ﻿using NeuralNetwork.Helpers;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
@@ -25,7 +26,7 @@ namespace NeuralNetwork.NetworkModels
             OutputLayer = outputLayer;
         }
 
-        public Network(int inputSize, int[] hiddenSizes, int outputSize, double learnRate = .4, double momentum = .9)
+        public Network(int inputSize, int[] hiddenSizes, int outputSize, double learnRate = 0.4d, double momentum = 0.9d)
 		{
 			LearnRate = learnRate;
 			Momentum = momentum;
@@ -109,7 +110,7 @@ namespace NeuralNetwork.NetworkModels
 
         public static double GetRandom()
 		{
-			return 2 * Random.NextDouble() - 1;
+			return 2d * Random.NextDouble() - 1d;
 		}
 
         public HelperNetwork ToHelperNetwork()

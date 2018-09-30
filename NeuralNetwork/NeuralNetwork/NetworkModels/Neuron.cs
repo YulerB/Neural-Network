@@ -19,7 +19,8 @@ namespace NeuralNetwork.NetworkModels
 
         public EventHandler<NeuronBiasUpdatedEventArg> OnBiasUpdated;
 
-        private static readonly IActivationFunction activationFunction = new Sigmoid();
+        //private readonly IActivationFunction activationFunction = new Sigmoid();
+        private readonly IActivationFunction activationFunction = new SoftPlus();
 
         public Neuron()
 		{
