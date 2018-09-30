@@ -1,73 +1,113 @@
-﻿using System;
+﻿using NeuralNetwork.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace NeuralNetwork.NetworkModels
 {
-	public class Neuron
-	{
-		#region -- Properties --
-		public Guid Id { get; set; }
-		public List<Synapse> InputSynapses { get; set; }
-		public List<Synapse> OutputSynapses { get; set; }
-		public double Bias { get; set; }
-		public double BiasDelta { get; set; }
-		public double Gradient { get; set; }
-		public double Value { get; set; }
-		#endregion
 
-		#region -- Constructors --
-		public Neuron()
+    public class Neuron
+	{
+        private Guid Id;
+        private Synapses InputSynapses;
+        private Synapses OutputSynapses;
+        private double Bias;
+        private double BiasDelta;
+        private double Gradient;
+        private double Value;
+
+        public EventHandler<NeuronBiasUpdatedEventArg> OnBiasUpdated;
+
+        private static readonly IActivationFunction activationFunction = new Sigmoid();
+
+        public Neuron()
 		{
 			Id = Guid.NewGuid();
-			InputSynapses = new List<Synapse>();
-			OutputSynapses = new List<Synapse>();
+			InputSynapses = new Synapses();
+			OutputSynapses = new Synapses();
 			Bias = Network.GetRandom();
 		}
-
-		public Neuron(IEnumerable<Neuron> inputNeurons) : this()
+        public Neuron(Guid id, double bias, double biasDelta, double gradient, double value)
+        {
+            this.Id = id;
+            this.Bias = bias;
+            this.BiasDelta = biasDelta;
+            this.Gradient = gradient;
+            this.Value = value;
+        }
+		public Neuron(NeuralLayer inputNeurons) : this()
 		{
-			foreach (var inputNeuron in inputNeurons)
-			{
-				var synapse = new Synapse(inputNeuron, this);
-				inputNeuron.OutputSynapses.Add(synapse);
-				InputSynapses.Add(synapse);
-			}
-		}
-		#endregion
+            InputSynapses.AddRange(inputNeurons.Select(inputNeuron =>
+            {
+                var synapse = new Synapse(inputNeuron, this);
+                inputNeuron.OutputSynapses.Add(synapse);
+                return synapse;
+            }));
+            InputSynapses.ForEach(_ => this.OnBiasUpdated += _.NeuronBiasUpdated); // Receive Weight Updates for Back Propogation.
+        }
 
-		#region -- Values & Weights --
-		public virtual double CalculateValue()
+        internal void SetInput(double v)
+        {
+            Value = v;
+        }
+        public double GetValue()
+        {
+            return Value;
+        }
+        public double CalculateValue()
 		{
-			return Value = Sigmoid.Output(InputSynapses.Sum(a => a.Weight * a.InputNeuron.Value) + Bias);
+			return Value = activationFunction.Activate(InputSynapses.CalculateValue() + Bias);
 		}
-
-		public double CalculateError(double target)
+        public double CalculateValueByWeight(double weight)
+        {
+            return weight * Value;
+        }        
+        public double CalculateError(double target)
+        {
+            return target - Value;
+        }
+        public double CalculateGradient(double? target = null)
 		{
-			return target - Value;
-		}
-
-		public double CalculateGradient(double? target = null)
-		{
-			if (target == null)
-				return Gradient = OutputSynapses.Sum(a => a.OutputNeuron.Gradient * a.Weight) * Sigmoid.Derivative(Value);
-
-			return Gradient = CalculateError(target.Value) * Sigmoid.Derivative(Value);
-		}
-
-		public void UpdateWeights(double learnRate, double momentum)
-		{
-			var prevDelta = BiasDelta;
-			BiasDelta = learnRate * Gradient;
-			Bias += BiasDelta + momentum * prevDelta;
-
-			foreach (var synapse in InputSynapses)
-			{
-				prevDelta = synapse.WeightDelta;
-				synapse.WeightDelta = learnRate * Gradient * synapse.InputNeuron.Value;
-				synapse.Weight += synapse.WeightDelta + momentum * prevDelta;
-			}
-		}
-		#endregion
-	}
+            return target == null ? 
+                Gradient = OutputSynapses.Sum(a => a.CalculateGradient()) * activationFunction.Derivative(Value) :
+                Gradient = CalculateError(target.Value) * activationFunction.Derivative(Value);
+        }
+        public double CalculateWeightDelta (double learnRate, double gradient)
+        {
+            return learnRate * gradient * Value;
+        }
+        public double CalculateGradientByWeight(double weight)
+        {
+            return weight * Gradient;
+        }
+        public void UpdateBias(double learnRate, double momentum)
+        {
+            UpdateInternalBias(learnRate, momentum);
+            if (OnBiasUpdated != null) this.OnBiasUpdated(this, new NeuronBiasUpdatedEventArg (learnRate, momentum, Gradient));
+        }
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void UpdateInternalBias(double learnRate, double momentum)
+        {
+            var prevDelta = BiasDelta;
+            BiasDelta = learnRate * Gradient;
+            Bias += BiasDelta + momentum * prevDelta;
+        }        
+        public HelperNeuron ToHelperNeuron()
+        {
+            return new HelperNeuron(Bias,BiasDelta,Gradient,Id,Value);
+        }
+        public IEnumerable<HelperSynapse> ToOutputHelperSynapses()
+        {
+            return OutputSynapses.ToHelperSynapses();
+        }
+        public void AddOutputSynapse(Synapse synapse)
+        {
+            OutputSynapses.Add(synapse);
+        }
+        public void AddInputSynapse(Synapse synapse)
+        {
+            InputSynapses.Add(synapse);
+        }
+    }
 }

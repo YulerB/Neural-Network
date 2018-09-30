@@ -48,12 +48,18 @@
   <ItemGroup>
     <Compile Include="Helpers\ExportHelper.cs" />
     <Compile Include="Helpers\HelperNetwork.cs" />
+    <Compile Include="Helpers\HelperNeuron.cs" />
+    <Compile Include="Helpers\HelperSynapse.cs" />
     <Compile Include="Helpers\ImportHelper.cs" />
     <Compile Include="NetworkModels\Dataset.cs" />
+    <Compile Include="NetworkModels\IActivationFunction.cs" />
     <Compile Include="NetworkModels\Network.cs" />
+    <Compile Include="NetworkModels\NeuralLayer.cs" />
     <Compile Include="NetworkModels\Neuron.cs" />
+    <Compile Include="NetworkModels\NeuronBiasUpdatedEventArg.cs" />
     <Compile Include="NetworkModels\Sigmoid.cs" />
     <Compile Include="NetworkModels\Synapse.cs" />
+    <Compile Include="NetworkModels\Synapses.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

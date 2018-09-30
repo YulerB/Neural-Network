@@ -12,85 +12,57 @@ namespace NeuralNetwork.Helpers
 	{
 		public static Network ImportNetwork()
 		{
-			var dn = GetHelperNetwork();
-			if (dn == null) return null;
+            var allHelperNeurons = new Dictionary<Guid, Neuron>();
 
-			var network = new Network();
-			var allNeurons = new List<Neuron>();
+            var dn = GetHelperNetwork();
 
-			network.LearnRate = dn.LearnRate;
-			network.Momentum = dn.Momentum;
+            if (dn == null) return null;
 
-			//Input Layer
-			foreach (var n in dn.InputLayer)
+            NeuralLayer inputLayer = new NeuralLayer();
+            List<NeuralLayer> hiddenLayer = new List<NeuralLayer>();
+            NeuralLayer outputLayer = new NeuralLayer();
+
+            //Input Layer
+            foreach (var n in dn.InputLayer)
 			{
-				var neuron = new Neuron
-				{
-					Id = n.Id,
-					Bias = n.Bias,
-					BiasDelta = n.BiasDelta,
-					Gradient = n.Gradient,
-					Value = n.Value
-				};
-
-				network.InputLayer.Add(neuron);
-				allNeurons.Add(neuron);
-			}
+				var neuron = new Neuron(n.Id,n.Bias,n.BiasDelta,n.Gradient,n.Value);
+                inputLayer.Add(neuron);
+                allHelperNeurons.Add(n.Id,neuron);
+            }
 
 			//Hidden Layers
 			foreach (var layer in dn.HiddenLayers)
 			{
-				var neurons = new List<Neuron>();
-				foreach (var n in layer)
-				{
-					var neuron = new Neuron
-					{
-						Id = n.Id,
-						Bias = n.Bias,
-						BiasDelta = n.BiasDelta,
-						Gradient = n.Gradient,
-						Value = n.Value
-					};
+                var enumNeuron = layer.Select(n => {
 
-					neurons.Add(neuron);
-					allNeurons.Add(neuron);
-				}
+                    var neuron = new Neuron(n.Id, n.Bias, n.BiasDelta, n.Gradient, n.Value);
+                    allHelperNeurons.Add(n.Id, neuron);
+                    return neuron;
+                });
 
-				network.HiddenLayers.Add(neurons);
-			}
-
-			//Export Layer
-			foreach (var n in dn.OutputLayer)
+                var neurons = new NeuralLayer(enumNeuron);
+                hiddenLayer.Add(neurons);
+            }
+            
+            //Export Layer
+            foreach (var n in dn.OutputLayer)
 			{
-				var neuron = new Neuron
-				{
-					Id = n.Id,
-					Bias = n.Bias,
-					BiasDelta = n.BiasDelta,
-					Gradient = n.Gradient,
-					Value = n.Value
-				};
+                var neuron = new Neuron(n.Id, n.Bias, n.BiasDelta, n.Gradient, n.Value);
+                outputLayer.Add(neuron);
+                allHelperNeurons.Add(n.Id, neuron);
+            }
 
-				network.OutputLayer.Add(neuron);
-				allNeurons.Add(neuron);
-			}
-
-			//Synapses
-			foreach (var syn in dn.Synapses)
+            //Synapses
+            foreach (var syn in dn.Synapses)
 			{
-				var synapse = new Synapse { Id = syn.Id };
-				var inputNeuron = allNeurons.First(x => x.Id == syn.InputNeuronId);
-				var outputNeuron = allNeurons.First(x => x.Id == syn.OutputNeuronId);
-				synapse.InputNeuron = inputNeuron;
-				synapse.OutputNeuron = outputNeuron;
-				synapse.Weight = syn.Weight;
-				synapse.WeightDelta = syn.WeightDelta;
-
-				inputNeuron.OutputSynapses.Add(synapse);
-				outputNeuron.InputSynapses.Add(synapse);
+                var inputNeuron = allHelperNeurons[syn.InputNeuronId];
+				var outputNeuron = allHelperNeurons[syn.OutputNeuronId];
+                var synapse = new Synapse(syn.Id, inputNeuron, outputNeuron, syn.Weight, syn.WeightDelta );
+				inputNeuron.AddOutputSynapse(synapse);
+				outputNeuron.AddInputSynapse(synapse);
 			}
 
-			return network;
+            return new Network(dn.LearnRate, dn.Momentum, inputLayer, hiddenLayer, outputLayer);
 		}
 
 		public static List<DataSet> ImportDatasets()
