@@ -1,13 +1,12 @@
 ﻿using NeuralNetwork.Helpers;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace NeuralNetwork.NetworkModels
 {
-	public class Network
+    public class Network
 	{
         private double LearnRate;
         private double Momentum;

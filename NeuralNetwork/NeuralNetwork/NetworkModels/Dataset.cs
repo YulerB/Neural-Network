@@ -2,10 +2,12 @@
 {
 	public class DataSet
 	{
-		public double[] Values { get; private set; }
-		public double[] Targets { get; private set; }
+		public double[] Values { get;  set; }
+		public double[] Targets { get;  set; }
 
-		public DataSet(double[] values, double[] targets)
+        public DataSet() { }
+
+        public DataSet(double[] values, double[] targets)
 		{
 			Values = values;
 			Targets = targets;

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using NeuralNetwork.Helpers;
 using NeuralNetwork.NetworkModels;
 
 namespace NeuralNetwork
 {
-	internal class Program
+    internal class Program
 	{
 
         #region -- Main --
@@ -30,6 +29,11 @@ namespace NeuralNetwork
                 new DataSet(new double[]{1,0}, new double[]{1}),
                 new DataSet(new double[]{1,1}, new double[]{0})
             };
+
+            ExportHelper.ExportDatasets(dataSet);
+
+            ImportHelper.ImportDatasets();
+
             double minErrorRate = 0.03;
             var epochs = _network.Train(dataSet, minErrorRate);
 
