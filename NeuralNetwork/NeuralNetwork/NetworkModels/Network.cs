@@ -25,10 +25,10 @@ namespace NeuralNetwork.NetworkModels
             OutputLayer = outputLayer;
         }
 
-        public Network(int inputSize, int[] hiddenSizes, int outputSize, double? learnRate = null, double? momentum = null)
+        public Network(int inputSize, int[] hiddenSizes, int outputSize, double learnRate = .4, double momentum = .9)
 		{
-			LearnRate = learnRate ?? .4;
-			Momentum = momentum ?? .9;
+			LearnRate = learnRate;
+			Momentum = momentum;
 			HiddenLayers = new List<NeuralLayer>(hiddenSizes.Length);
             InputLayer = new NeuralLayer(inputSize);
             HiddenLayers.Add(new NeuralLayer(hiddenSizes[0], InputLayer));
