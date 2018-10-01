@@ -41,6 +41,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActivationFunctions\Gaussian.cs" />
+    <Compile Include="ActivationFunctions\Sinusoid.cs" />
+    <Compile Include="ActivationFunctions\ArcTan.cs" />
     <Compile Include="Helpers\ExportHelper.cs" />
     <Compile Include="Helpers\HelperNetwork.cs" />
     <Compile Include="Helpers\HelperNeuron.cs" />

@@ -25,7 +25,11 @@ namespace NeuralNetwork.Helpers
             //Input Layer
             foreach (var n in dn.InputLayer)
 			{
-				var neuron = new Neuron(n.Id,n.Bias,n.BiasDelta,n.Gradient,n.Value);
+                IActivationFunction activationFunction = null;
+                if(n.ActivationFunctionType!=null)
+                    activationFunction = (IActivationFunction) Activator.CreateInstance(Type.GetType(n.ActivationFunctionType));
+
+				var neuron = new Neuron(activationFunction, n.Id,n.Bias,n.BiasDelta,n.Gradient,n.Value);
                 inputLayer.Add(neuron);
                 allHelperNeurons.Add(n.Id,neuron);
             }
@@ -35,7 +39,10 @@ namespace NeuralNetwork.Helpers
 			{
                 var enumNeuron = layer.Select(n => {
 
-                    var neuron = new Neuron(n.Id, n.Bias, n.BiasDelta, n.Gradient, n.Value);
+                    IActivationFunction activationFunction = null;
+                    if (n.ActivationFunctionType != null)
+                        activationFunction = (IActivationFunction)Activator.CreateInstance(Type.GetType(n.ActivationFunctionType));
+                    var neuron = new Neuron(activationFunction, n.Id, n.Bias, n.BiasDelta, n.Gradient, n.Value);
                     allHelperNeurons.Add(n.Id, neuron);
                     return neuron;
                 });
@@ -47,7 +54,10 @@ namespace NeuralNetwork.Helpers
             //Export Layer
             foreach (var n in dn.OutputLayer)
 			{
-                var neuron = new Neuron(n.Id, n.Bias, n.BiasDelta, n.Gradient, n.Value);
+                IActivationFunction activationFunction = null;
+                if (n.ActivationFunctionType != null)
+                    activationFunction = (IActivationFunction)Activator.CreateInstance(Type.GetType(n.ActivationFunctionType));
+                var neuron = new Neuron(activationFunction, n.Id, n.Bias, n.BiasDelta, n.Gradient, n.Value);
                 outputLayer.Add(neuron);
                 allHelperNeurons.Add(n.Id, neuron);
             }

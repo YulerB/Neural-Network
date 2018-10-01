@@ -20,16 +20,23 @@ namespace NeuralNetwork.NetworkModels
         public EventHandler<NeuronBiasUpdatedEventArg> OnBiasUpdated;
 
         //private readonly IActivationFunction activationFunction = new Sigmoid();
-        private readonly IActivationFunction activationFunction = new SoftPlus();
+        //private readonly IActivationFunction activationFunction = new SoftPlus();
+        //private readonly IActivationFunction activationFunction = new Sinusoid();
+        //private readonly IActivationFunction activationFunction = new ArcTan();
+        //private readonly IActivationFunction activationFunction = new RELU();
+        //private readonly IActivationFunction activationFunction = new Gaussian();
+        private readonly IActivationFunction activationFunction;
 
-        public Neuron()
+        public Neuron(IActivationFunction activationFunction)
 		{
 			Id = Guid.NewGuid();
 			InputSynapses = new Synapses();
 			OutputSynapses = new Synapses();
 			Bias = Network.GetRandom();
-		}
-        public Neuron(Guid id, double bias, double biasDelta, double gradient, double value) : this()
+            this.activationFunction = activationFunction;
+
+        }
+        public Neuron(IActivationFunction activationFunction, Guid id, double bias, double biasDelta, double gradient, double value) : this(activationFunction)
         {
             this.Id = id;
             this.Bias = bias;
@@ -37,7 +44,7 @@ namespace NeuralNetwork.NetworkModels
             this.Gradient = gradient;
             this.Value = value;
         }
-		public Neuron(NeuralLayer inputNeurons) : this()
+		public Neuron(IActivationFunction activationFunction, NeuralLayer inputNeurons) : this(activationFunction)
 		{
             InputSynapses.AddRange(inputNeurons.Select(inputNeuron =>
             {
@@ -96,7 +103,7 @@ namespace NeuralNetwork.NetworkModels
         }        
         public HelperNeuron ToHelperNeuron()
         {
-            return new HelperNeuron(Bias,BiasDelta,Gradient,Id,Value);
+            return new HelperNeuron(Bias,BiasDelta,Gradient,Id,Value, activationFunction==null ? null : activationFunction.GetType().FullName);
         }
         public IEnumerable<HelperSynapse> ToOutputHelperSynapses()
         {

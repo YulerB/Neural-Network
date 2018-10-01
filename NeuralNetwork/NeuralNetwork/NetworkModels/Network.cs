@@ -26,15 +26,22 @@ namespace NeuralNetwork.NetworkModels
             OutputLayer = outputLayer;
         }
 
-        public Network(int inputSize, int[] hiddenSizes, int outputSize, double learnRate = 0.4d, double momentum = 0.9d)
+        public Network(int inputSize, int[] hiddenSizes, IActivationFunction[] activationFunctions, int outputSize, IActivationFunction outputActivationFunction, double learnRate = 0.4d, double momentum = 0.9d)
 		{
 			LearnRate = learnRate;
 			Momentum = momentum;
 			HiddenLayers = new List<NeuralLayer>(hiddenSizes.Length);
-            InputLayer = new NeuralLayer(inputSize);
-            HiddenLayers.Add(new NeuralLayer(hiddenSizes[0], InputLayer));
-            HiddenLayers.AddRange(Enumerable.Range(1, hiddenSizes.Length - 1).Select(i => new NeuralLayer(Enumerable.Range(0, hiddenSizes[i]).Select(_ => new Neuron(HiddenLayers[i - 1])))));
-            OutputLayer = new NeuralLayer(outputSize, HiddenLayers.Last());
+            InputLayer = new NeuralLayer(null, inputSize);
+            HiddenLayers.Add(new NeuralLayer(activationFunctions[0], hiddenSizes[0], InputLayer));
+            HiddenLayers
+                .AddRange(
+                    Enumerable.Range(1, hiddenSizes.Length - 1)
+                    .Select(i => new NeuralLayer(
+                        Enumerable.Range(0, hiddenSizes[i])
+                        .Select(_ => new Neuron(activationFunctions[i-1],HiddenLayers[i - 1])))
+                    )
+                );
+            OutputLayer = new NeuralLayer(outputActivationFunction, outputSize, HiddenLayers.Last());
 		}
 
         public int HiddenLayersCount

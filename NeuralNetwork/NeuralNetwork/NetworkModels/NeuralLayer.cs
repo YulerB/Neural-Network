@@ -8,8 +8,8 @@ namespace NeuralNetwork.NetworkModels
     {
         public NeuralLayer() : base() { }
         public NeuralLayer(IEnumerable<Neuron> neurons) : base(neurons) {}
-        public NeuralLayer(int inputSize) : base(Enumerable.Range(0, inputSize).Select(_ => new Neuron())) { }
-        public NeuralLayer(int inputSize, NeuralLayer InputLayer) : base (Enumerable.Range(0, inputSize).Select(_ => new Neuron(InputLayer))){}
+        public NeuralLayer(IActivationFunction activationFunction, int inputSize) : base(Enumerable.Range(0, inputSize).Select(_ => new Neuron(activationFunction))) { }
+        public NeuralLayer(IActivationFunction activationFunction, int inputSize, NeuralLayer InputLayer) : base (Enumerable.Range(0, inputSize).Select(_ => new Neuron(activationFunction, InputLayer))){}
         internal void SetInputs(double[] inputs)
         {
             int i = 0;

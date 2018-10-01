@@ -23,7 +23,7 @@ namespace NeuralNetwork
 
         private static void MakeNetworkBinary2OR()
         {
-            Network _network = new Network(2, new int[] { 2 }, 1);
+            Network _network = new Network(2, new int[] { 2 }, new IActivationFunction[] { new Sigmoid() }, 1, new Sigmoid());
             var dataSet = new List<DataSet>{
                 new DataSet(new double[]{0,0}, new double[]{0}),
                 new DataSet(new double[]{0,1}, new double[]{1}),
@@ -54,7 +54,7 @@ namespace NeuralNetwork
 
         private static void MakeNetworkBinary3ToDecimal()
         {
-            var _network = new Network(3, new int[] { 5 }, 1);
+            var _network = new Network(3, new int[] { 5 }, new IActivationFunction[] { new Sigmoid() }, 1, new Sigmoid());
             var dataSet = new List<DataSet>{
                 new DataSet(new double[]{0, 0, 0}, new double[]{0}),
                 new DataSet(new double[]{0, 0, 1}, new double[]{0.1}),
@@ -79,7 +79,7 @@ namespace NeuralNetwork
 
         private static void MakeNetworkBinaryDigitAdd()
         {
-            var _network = new Network(4, new int[] { 8 }, 1);
+            var _network = new Network(4, new int[] { 8 }, new IActivationFunction[] { new Sigmoid() }, 1, new Sigmoid());
             var dataSet = new List<DataSet>{
                 new DataSet(new double[]{ 0, 0, 0, 0 }, new double[]{0.0}),
                 new DataSet(new double[]{ 0, 0, 0, 1 }, new double[]{0.1}),
@@ -112,7 +112,7 @@ namespace NeuralNetwork
 
         private static void MakeNetworkForBinary4ToDecimal()
         {
-            var _network = new Network(4, new int[] { 8 }, 1);
+            var _network = new Network(4, new int[] { 8 }, new IActivationFunction[] { new Sigmoid() }, 1, new Sigmoid());
             var dataSet = new List<DataSet>{
                 new DataSet(new double[]{ 0, 0, 0, 0 }, new double[]{0.00}),
                 new DataSet(new double[]{ 0, 0, 0, 1 }, new double[]{0.01}),

@@ -14,7 +14,7 @@ namespace NeuralNetwork.NetworkModels
 
 		public double Derivative(double x)
 		{
-            return x <= 0d ? 0d : 1d;
+            return x < 0d ? 0d : 1d;
         }
     }
 }
